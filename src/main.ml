@@ -1,7 +1,10 @@
 open String
 
 (* Définition des types *)
-type state = ALIVE | DEAD;;
+type state = A | D ;;
+type generation = state array array;;
+type rule = string ;;
+type automaton = rule list;;
 
 (* Ouverture du fichier *)
 let fichier = "automate.txt";;
@@ -30,18 +33,6 @@ let parse in_chanel =
 	| e -> close_in_noerr in_chanel; raise e;
 ;;
 
-(*
-let rec print_file () = 
-	try
-		let line = input_line in_chanel in
-			print_endline line;
-			flush stdout;
-			print_file ();
-
-	with 
-	| End_of_file -> print_string("Fin du fichier.\n");
-	| e -> close_in_noerr in_chanel; raise e;
-;;*)	
 
 parse in_chanel;;
 
