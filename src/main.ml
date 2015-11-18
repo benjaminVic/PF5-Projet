@@ -1,16 +1,18 @@
 let fichier = "automate.txt";;
+let in_chanel = open_in fichier;;
 
-let print_file file =
-	let ic = open_in file in
-	try 
-		let line = input_line ic in
-		print_endline line;
-		flush stdout;
-		close_in ic
+let rec print_file () = 
+	try
+		let line = input_line in_chanel in
+			print_endline line;
+			flush stdout;
+			print_file ();
 
-	with e ->
-		close_in_noerr ic;
-		raise e
-;;
+	with 
+	| End_of_file -> print_string("Fin du fichier.\n");
+	| e -> close_in_noerr in_chanel;
+				 raise e;
+;;	
 
-print_file(fichier);
+
+print_file ();
