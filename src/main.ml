@@ -22,10 +22,10 @@ let getSizeGrid in_chanel =
 let rec getRules in_chanel =
 	let line = input_line in_chanel in
 		if (String.compare line "GenerationZero") != 0 then
-		begin
-			print_endline line;
-			getRules in_chanel;
-		end
+			begin
+				print_endline line;
+				getRules in_chanel;
+			end
 		else ()
 ;;
 
@@ -58,3 +58,4 @@ let parse in_chanel =
 
 parse in_chanel;;
 
+(* Mon nouveau commentaire super utile *)
