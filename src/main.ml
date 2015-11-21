@@ -8,8 +8,8 @@ exception File_structure
 (* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *)
 (* Définition des types *)
 type state = A | D ;;
-type generation = state array array;;
-type rule = string ;;
+type generation = State of state array array;;
+type rule = string;;
 type automaton = rule list;;
 (* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *)
 
@@ -75,6 +75,30 @@ let rule2 : rule = "CCBCB";;
 
 let maListe : rule list = rule1::rule2::[];;
 
-print_list maListe;
+(* print_list maListe; *)
+(* parse in_chanel;; *)
 
-parse in_chanel;;
+(* ############################################## *)
+(* SANS PARSING DE FICHIER *)
+(* ############################################## *)
+
+
+let generationZero = Array.make_matrix 5 5 A;; 
+
+let print_state s = match s with
+| A -> print_string "A"
+| D -> print_string "D"
+;;
+
+let show_generation g = 
+	for i = 0 to 4 do
+	begin
+		for j = 0 to 4 do
+			print_state g.(j).(i)
+		done;
+		print_newline();
+	end
+	done
+;;
+
+show_generation generationZero;;
