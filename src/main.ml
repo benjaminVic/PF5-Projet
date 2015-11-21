@@ -8,8 +8,8 @@ exception File_structure
 (* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *)
 (* Définition des types *)
 type state = A | D ;;
+type rule = state * state * state * state * state;;
 type generation = State of state array array;;
-type rule = string;;
 type automaton = rule list;;
 (* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *)
 
@@ -70,10 +70,6 @@ let parse in_chanel =
 	| e -> close_in_noerr in_chanel; raise e;
 ;;
 
-let rule1 : rule = "BBBCB";;
-let rule2 : rule = "CCBCB";;
-
-let maListe : rule list = rule1::rule2::[];;
 
 (* print_list maListe; *)
 (* parse in_chanel;; *)
@@ -82,8 +78,22 @@ let maListe : rule list = rule1::rule2::[];;
 (* SANS PARSING DE FICHIER *)
 (* ############################################## *)
 
+let rule1 = (A,A,A,A,A);;
+let rule2 = (A,A,A,A,D);;
+let rule3 = (A,A,A,D,A);;
+let rule4 = (A,A,A,D,D);;
 
-let generationZero = Array.make_matrix 5 5 A;; 
+let sizeGrid = 7;;
+let automaton = rule1::rule2::rule3::rule4::[];;
+
+let generationZero = Array.make_matrix 7 7 A;; 
+generationZero.(0).(0) <- D;;
+generationZero.(1).(1) <- D;;
+generationZero.(2).(2) <- D;;
+generationZero.(3).(3) <- D;;
+generationZero.(4).(4) <- D;;
+generationZero.(5).(5) <- D;;
+generationZero.(6).(6) <- D;;
 
 let print_state s = match s with
 | A -> print_string "A"
@@ -91,9 +101,9 @@ let print_state s = match s with
 ;;
 
 let show_generation g = 
-	for i = 0 to 4 do
+	for i = 0 to sizeGrid-1 do
 	begin
-		for j = 0 to 4 do
+		for j = 0 to sizeGrid-1 do
 			print_state g.(j).(i)
 		done;
 		print_newline();
