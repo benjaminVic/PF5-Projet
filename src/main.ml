@@ -23,8 +23,6 @@ let rec print_list = function
 	| a::t -> print_string a; print_string " "; print_list t
 ;;
 
-
-
 (* Transforme un char en state*)
 let charToState s = match s with 
   | 'A' -> A
@@ -37,6 +35,20 @@ let rec stringToRule s =
   if (length s = 5) then
     charToState( get s 0),charToState( get s 1),charToState( get s 2),charToState( get s 3),charToState( get s 4)
   else failwith("This line should not be read")
+;;
+
+(* Récupère les rule depuis le fichier text en retourne un automaton*)
+let getRules in_chanel =
+  let rec getRulesAux in_chanel automatonResult=
+    let line = input_line in_chanel in
+    if (String.compare line "GenerationZero") != 0 then
+      begin
+	(*print_endline line;*)
+	let rule = stringToRule line in
+	getRulesAux in_chanel automatonResult@[rule];
+      end
+    else(automatonResult)
+  in getRulesAux in_chanel []
 ;;
 
 (* Récupère la première ligne du fichier *)
