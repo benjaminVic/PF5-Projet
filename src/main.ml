@@ -23,6 +23,22 @@ let rec print_list = function
 	| a::t -> print_string a; print_string " "; print_list t
 ;;
 
+
+
+(* Transforme un char en state*)
+let charToState s = match s with 
+  | 'A' -> A
+  | 'D' -> D
+  | _ -> failwith("This shouldn't be read")
+;;
+
+(* Transforme une string en rule *)
+let rec stringToRule s =
+  if (length s = 5) then
+    charToState( get s 0),charToState( get s 1),charToState( get s 2),charToState( get s 3),charToState( get s 4)
+  else failwith("This line should not be read")
+;;
+
 (* Récupère la première ligne du fichier *)
 let getSizeGrid in_chanel = 
 	let line = input_line in_chanel in
