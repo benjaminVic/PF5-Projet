@@ -1,17 +1,5 @@
 open String
-
-(* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *)
-(* Définition des exceptions *)
-exception File_structure
-(* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *)
-
-(* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *)
-(* Définition des types *)
-type state = A | D ;;
-type rule = state * state * state * state * state;;
-type generation = State of state array array;;
-type automaton = rule list;;
-(* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *)
+open Types
 
 (* Ouverture du fichier *)
 let fichier = "automate.txt";;
@@ -21,20 +9,6 @@ let in_chanel = open_in fichier;;
 let rec print_list = function
 	|[] -> print_newline()
 	| a::t -> print_string a; print_string " "; print_list t
-;;
-
-(* Transforme un char en state*)
-let charToState s = match s with 
-  | 'A' -> A
-  | 'D' -> D
-  | _ -> failwith("This shouldn't be read")
-;;
-
-(* Transforme une string en rule *)
-let rec stringToRule s =
-  if (length s = 5) then
-    charToState( get s 0),charToState( get s 1),charToState( get s 2),charToState( get s 3),charToState( get s 4)
-  else failwith("This line should not be read")
 ;;
 
 (* Récupère les rule depuis le fichier text en retourne un automaton*)
@@ -57,17 +31,6 @@ let getSizeGrid in_chanel =
 		int_of_string line
 ;;
 
-(* Récupère les règles du fichier *)
-let rec getRules in_chanel =
-	let line = input_line in_chanel in
-		if (String.compare line "GenerationZero") != 0 then
-			begin
-				print_endline line;
-				getRules in_chanel;
-			end
-		else ()
-;;
-
 (* Récupère la génération Zero *)
 let rec getGenerationZero in_chanel = 
 	let line = input_line in_chanel in
@@ -85,7 +48,7 @@ let parse in_chanel =
 		(* Récupération des règles *)
 
 		let line = input_line in_chanel in
-			if (String.compare line "Regles") = 0 then
+			if (String.compare	 line "Regles") = 0 then
 				getRules in_chanel
 			else raise File_structure;
 
@@ -126,6 +89,13 @@ generationZero.(6).(6) <- D;;
 let print_state s = match s with
 | A -> print_string "A"
 | D -> print_string "D"
+;;
+
+let rec next_state listesRules(n,e,s,o,cell) = match listesRules with
+  | [] -> cell
+  | a::t -> match a with
+    | (a,b,c,d,f) when (a=n && b=e && c=s && d=o && f=cell) -> if cell = A then D else A
+    | _ -> next_state t  (n,e,s,o,cell)
 ;;
 
 let show_generation g = 
