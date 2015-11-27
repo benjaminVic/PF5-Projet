@@ -1,42 +1,12 @@
 open String
+
 open Types
+open Affichage
+open Auxiliaires
 
 (* Ouverture du fichier *)
 let fichier = "automate.txt";;
 let in_chanel = open_in fichier;;
-
-(* Affiche une liste *)
-let rec print_list = function
-	|[] -> print_newline()
-	| a::t -> print_string a; print_string " "; print_list t
-;;
-
-(* Récupère les rule depuis le fichier text en retourne un automaton*)
-let getRules in_chanel =
-  let rec getRulesAux in_chanel automatonResult=
-    let line = input_line in_chanel in
-    if (String.compare line "GenerationZero") != 0 then
-      begin
-	(*print_endline line;*)
-	let rule = stringToRule line in
-	getRulesAux in_chanel automatonResult@[rule];
-      end
-    else(automatonResult)
-  in getRulesAux in_chanel []
-;;
-
-(* Récupère la première ligne du fichier *)
-let getSizeGrid in_chanel = 
-	let line = input_line in_chanel in
-		int_of_string line
-;;
-
-(* Récupère la génération Zero *)
-let rec getGenerationZero in_chanel = 
-	let line = input_line in_chanel in
-		print_endline line;
-		getGenerationZero in_chanel;
-;;
 
 (* Construit l'automate contenu dans le fichier *)
 let parse in_chanel = 
@@ -59,41 +29,6 @@ let parse in_chanel =
 	| End_of_file -> print_string("Fin du fichier.\n");
 	| File_structure -> print_string("Fichier malformé.\n");
 	| e -> close_in_noerr in_chanel; raise e;
-;;
-
-
-(* print_list maListe; *)
-(* parse in_chanel;; *)
-
-(* ############################################## *)
-(* SANS PARSING DE FICHIER *)
-(* ############################################## *)
-
-let sizeGrid = 7;;
-
-(* Modifie une cellule x;y dans une génération g avec l'état s *)
-let setState g x y s = 
-	g.(x).(y) <- s;
-;;
-
-(* Affiche un etat s *)
-let print_state s = match s with
-| A -> print_string " A "
-| D -> print_string " D "
-;;
-
-(* Affiche une génération g *)
-let show_generation g =
-	print_endline "---------------------";
-	for i = 0 to sizeGrid-1 do
-	begin
-		for j = 0 to sizeGrid-1 do
-			print_state g.(j).(i)
-		done;
-		print_newline();
-	end
-	done;
-	print_endline "---------------------";
 ;;
 
 (* Retourne le prochain état d'une cellule en fonction de son voisinage *)
@@ -125,6 +60,13 @@ let next_generation a (g : state array array) =
 		done;
 		generationTemp
 ;;
+
+
+(* ############################################## *)
+(* SANS PARSING DE FICHIER *)
+(* ############################################## *)
+
+let sizeGrid = 7;;
 
 let rule1 = (A,A,A,A,A);;
 let rule2 = (A,A,A,A,D);;
