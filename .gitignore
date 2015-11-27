@@ -2,3 +2,8 @@ src/types.ml~
 src/main.ml~
 src/#main.ml~
 src/#main.ml#
+src/affichage.ml~
+src/auxiliaire.ml~
+src/auxiliaires.ml~
+.gitignore
+src/AutCellulaire

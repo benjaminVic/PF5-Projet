@@ -1,4 +1,5 @@
 open String
+open List
 
 open Types
 open Affichage
@@ -11,6 +12,8 @@ let in_chanel = open_in fichier;;
 (* Construit l'automate contenu dans le fichier *)
 let parse in_chanel = 
 	try
+		(*let gridSize = getSizeGrid in_chanel in
+		(gridSize),(getRules in_chanel),(getGenerationZero in_chanel)*)
 		(* Récupération de la taille *)
 		print_int (getSizeGrid in_chanel);
 		print_newline();
@@ -19,7 +22,9 @@ let parse in_chanel =
 
 		let line = input_line in_chanel in
 			if (String.compare	 line "Regles") = 0 then
-				getRules in_chanel
+			let automatonResult = getRules in_chanel in
+				rev automatonResult;
+				show_automaton automatonResult;	
 			else raise File_structure;
 
 		(* Récupération de la generationZero *)
@@ -30,6 +35,9 @@ let parse in_chanel =
 	| File_structure -> print_string("Fichier malformé.\n");
 	| e -> close_in_noerr in_chanel; raise e;
 ;;
+
+(* TO DELETE*)
+parse in_chanel;;
 
 (* Retourne le prochain état d'une cellule en fonction de son voisinage *)
 let rec next_state listeRules (n,e,s,o,cell) = match listeRules with

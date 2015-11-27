@@ -26,3 +26,23 @@ let show_generation g sizeGrid =
 	done;
 	print_endline "---------------------";
 ;;
+
+(* Affiche une rule *)
+let show_rule (n,e,s,w,c) =
+print_state n; print_state e; print_state s; print_state w ;print_state c
+;;
+
+(* Affiche un automaton*)
+let show_automaton a =
+  print_endline "---------------------";  
+  print_endline "rêgles"; 
+  let lenght = List.length a in
+  for i = 0 to lenght-1 do   
+    begin 
+      let r = List.nth a i in     
+      show_rule r;
+      print_newline();
+    end
+  done;
+  print_endline "---------------------";
+;;

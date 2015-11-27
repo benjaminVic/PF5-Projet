@@ -1,5 +1,6 @@
 open String
 open Types
+open Affichage
 
 
 (* Transforme un char en state*)
@@ -13,7 +14,7 @@ let charToState s = match s with
 let rec stringToRule s =
   if (length s = 5) then
     charToState( get s 0),charToState( get s 1),charToState( get s 2),charToState( get s 3),charToState( get s 4)
-  else failwith("This line should not be read")
+  else raise File_structure;
 ;;
 
 (* Récupère la première ligne du fichier *)
