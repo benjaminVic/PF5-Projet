@@ -14,7 +14,7 @@ let print_state s = match s with
 ;;
 
 (* Affiche une génération g *)
-let show_generation g =
+let show_generation g sizeGrid =
 	print_endline "---------------------";
 	for i = 0 to sizeGrid-1 do
 	begin

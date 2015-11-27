@@ -40,8 +40,8 @@ let rec next_state listeRules (n,e,s,o,cell) = match listeRules with
 ;;
 
 (* Retourne la prochaine génération g calculée à partir d'un automate et d'une génération *)
-let next_generation a (g : state array array) = 
-	let generationTemp = Array.make_matrix 7 7 A in 
+let next_generation sizeGrid a (g : state array array) = 
+	let generationTemp = Array.make_matrix sizeGrid sizeGrid A in 
 		for i=0 to sizeGrid-1 do
 		begin
 			for j=0 to sizeGrid-1 do
@@ -84,7 +84,7 @@ setState generationZero 4 4 D;;
 setState generationZero 5 5 D;;
 setState generationZero 6 6 D;;
 
-let generationUne = next_generation automaton generationZero;;
+let generationUne = next_generation sizeGrid automaton generationZero;;
 
-show_generation generationZero;;
-show_generation generationUne;;
+show_generation generationZero sizeGrid;;
+show_generation generationUne sizeGrid;;
