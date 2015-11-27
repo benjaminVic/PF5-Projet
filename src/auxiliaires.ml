@@ -1,5 +1,6 @@
 open Types
 
+
 (* Transforme un char en state*)
 let charToState s = match s with 
   | 'A' -> A

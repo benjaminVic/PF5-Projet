@@ -1,5 +1,6 @@
 open Types
 
+
 (* Affiche une liste *)
 let rec print_list = function
 	|[] -> print_newline()
