@@ -11,7 +11,12 @@ let in_chanel = open_in fichier;;
 
 (* Construit l'automate contenu dans le fichier *)
 let parse in_chanel = 
-	try
+  let gridSize = getSizeGrid in_chanel in
+  let rule = getRules in_chanel in
+  let generationTemp = Array.make_matrix gridSize gridSize D in
+  let genZero = getGenerationZero generationTemp in_chanel gridSize in
+  (gridSize),(rule),(genZero);
+(*	try
 		(*let gridSize = getSizeGrid in_chanel in
 		(gridSize),(getRules in_chanel),(getGenerationZero in_chanel)*)
 		(* Récupération de la taille *)
@@ -33,7 +38,7 @@ let parse in_chanel =
 	with 
 	| End_of_file -> print_string("Fin du fichier.\n");
 	| File_structure -> print_string("Fichier malformé.\n");
-	| e -> close_in_noerr in_chanel; raise e;
+	| e -> close_in_noerr in_chanel; raise e;*)
 ;;
 
 (* TO DELETE*)
