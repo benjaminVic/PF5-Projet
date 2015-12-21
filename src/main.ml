@@ -46,9 +46,9 @@ parse in_chanel;;
 
 (* Retourne le prochain état d'une cellule en fonction de son voisinage *)
 let rec next_state listeRules (n,e,s,o,cell) = match listeRules with
-	|[] -> cell
+	|[] -> if cell = A then D else cell
 	|a::t -> match a with 
-		|(a,b,c,d,f) when (a=n && b=e && c=s && d=o && f=cell) -> if cell = A then D else A
+		|(a,b,c,d,f) when (a=n && b=e && c=s && d=o && f=cell) -> A
 		| _ -> next_state t (n,e,s,o,cell) 
 ;;
 
