@@ -34,6 +34,7 @@ let rec advanceToRules in_chanel =
 
 (* Récupère les rule depuis le fichier text en retourne un automaton*)
 let getRules in_chanel =
+  advanceToRules in_chanel;
   let rec getRulesAux in_chanel automatonResult=
     let line = input_line in_chanel in
     if (String.compare line "GenerationZero") != 0 then
