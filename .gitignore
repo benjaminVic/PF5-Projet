@@ -8,3 +8,4 @@ src/auxiliaires.ml~
 .gitignore
 src/AutCellulaire
 src/forumles.ml~
+bin/AutCellulaire
