@@ -13,21 +13,21 @@ let rec string_of_formule f = match f with
   | Ou (f1,f2) -> "("^string_of_formule f1^" OU "^string_of_formule f2^")"
 ;;
 
+(*Might have to replace l3 by l1 and l4 by l2*)
 let rec union_sorted l1 l2 = match l1,l2 with
   | _,[] -> l1
   | [],_ -> l2
-  | a1::l1’,a2::l2’ ->
-    if a1 < a2 then a1::(union_sorted l1’ l2 ) else
-      1if a2 < a1 then a2::(union_sorted l1
-			      a1::(union_sorted l1’ l2’);;
-			    l2’) else
-      let rec list_of_vars f =
-	match f with
-	| Var s -> [s]
-	| Neg f -> list_of_vars f
-	| Et(f1,f2) | Ou(f1,f2) -> union_sorted (list_of_vars f1)
-	  (list_of_vars f2)
-	| _ -> []
+  | a1::l3,a2::l4 ->
+    if a1 < a2 then a1::(union_sorted l3 l2 ) else
+      if a2 < a1 then a2::(union_sorted l1 l4) else
+      a1::(union_sorted l3 l4)
+;;
+
+let rec list_of_vars f = match f with
+  | Var s -> [s]
+  | Neg f -> list_of_vars f
+  | Et(f1,f2) | Ou(f1,f2) -> union_sorted (list_of_vars f1) (list_of_vars f2)
+  | _ -> []
 ;;
 
 let rec eval_formule f e = match f with
