@@ -34,9 +34,11 @@ let rec advanceToRules in_chanel =
 
 (* Récupère les rule depuis le fichier text en retourne un automaton*)
 let getRules in_chanel =
+  (* On se place au début des valeurs *)
   advanceToRules in_chanel;
   let rec getRulesAux in_chanel automatonResult=
     let line = input_line in_chanel in
+    (*On s'arrete à la générationZero*)
     if (String.compare line "GenerationZero") != 0 then
       begin
 	(*print_endline line;*)
@@ -52,20 +54,8 @@ let setState g x y s =
   g.(x).(y) <- s;
 ;;
 
-(*DEPRCATED Avance le flux de lecture jusqu'à la generationZero*)
-let rec advanceToGenerationZero in_chanel = 
-  try
-    let line = input_line in_chanel in
-    if (String.compare line "GenerationZero") = 0 then print_string ("Mise à niveau du flux de lecture à la générationZero.\n")
-    else advanceToGenerationZero in_chanel;
-  with 
-  | End_of_file -> print_string ("Fichier malformé au niveau de la generationZero");
-;;
-
 (* Récupère la génération Zero *)
 let getGenerationZero generationTemp in_chanel sizeGrid = 
-  (* On se place au début des valeurs *)
-  (*advanceToGenerationZero in_chanel;*)
   (* Affecte les valeurs au futur automaton *)
   let rec getGenerationZeroAuxColums generationTemp in_chanel sizeGrid lNumber =
     if lNumber<sizeGrid then
@@ -74,12 +64,10 @@ let getGenerationZero generationTemp in_chanel sizeGrid =
 	  let line = input_line in_chanel in
 	  (*Parcours la ligne et affecte les valeurs*)
 	  let rec getGenerationZeroAuxLine generationTemp in_chanel sizeGrid lNumber cNumber =
-	    print_int(length line);print_endline(line);
 	    if ((length line) = sizeGrid) then
 	      if (cNumber < sizeGrid) then
 		begin
 		  setState generationTemp lNumber cNumber (charToState(get line cNumber));
-		  print_int(lNumber);print_int(cNumber);print_string("\n");
 		  getGenerationZeroAuxLine generationTemp in_chanel sizeGrid lNumber (cNumber+1);
 		end
 	      else (getGenerationZeroAuxColums generationTemp in_chanel sizeGrid (lNumber+1))
@@ -90,9 +78,6 @@ let getGenerationZero generationTemp in_chanel sizeGrid =
 	| File_structure -> print_string("Fichier malformé.\n");
 	| e -> close_in_noerr in_chanel; raise e;
       end
-    else 
-      begin print_string("Fin de la récupération de la générationZero\n");
-	if sizeGrid = lNumber then print_string("Ce message ne doit apparaitre qu'une fois\n");
-      end
+    else print_string("Fin de la récupération de la générationZero\n");
   in getGenerationZeroAuxColums generationTemp in_chanel sizeGrid 0;
 ;;

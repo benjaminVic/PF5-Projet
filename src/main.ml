@@ -16,32 +16,8 @@ let parse in_chanel =
   let generationTemp = Array.make_matrix gridSize gridSize D in
   let genZero = getGenerationZero generationTemp in_chanel gridSize in
   (gridSize),(rule),(genZero);
-(*	try
-		(*let gridSize = getSizeGrid in_chanel in
-		(gridSize),(getRules in_chanel),(getGenerationZero in_chanel)*)
-		(* Récupération de la taille *)
-		print_int (getSizeGrid in_chanel);
-		print_newline();
-
-		(* Récupération des règles *)
-
-		let line = input_line in_chanel in
-			if (String.compare	 line "Regles") = 0 then
-			let automatonResult = getRules in_chanel in
-				rev automatonResult;
-				show_automaton automatonResult;	
-			else raise File_structure;
-
-		(* Récupération de la generationZero *)
-		getGenerationZero in_chanel;
-		
-	with 
-	| End_of_file -> print_string("Fin du fichier.\n");
-	| File_structure -> print_string("Fichier malformé.\n");
-	| e -> close_in_noerr in_chanel; raise e;*)
 ;;
 
-(* TO DELETE*)
 parse in_chanel;;
 
 (* Retourne le prochain état d'une cellule en fonction de son voisinage *)
