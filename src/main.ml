@@ -5,10 +5,6 @@ open Types
 open Affichage
 open Auxiliaires
 
-(* Ouverture du fichier *)
-let fichier = "automate.txt";;
-let in_chanel = open_in fichier;;
-
 (* Construit l'automate contenu dans le fichier *)
 let parse in_chanel = 
   let gridSize = getSizeGrid in_chanel in
@@ -18,7 +14,10 @@ let parse in_chanel =
   (gridSize),(rule),(genZero);
 ;;
 
-parse in_chanel;;
+(* Sauvegarde les éléments du parsing dans des références *)
+let saveToRef refS refA refG = function
+	|(s,a,g) -> (refS := s); (refA := a); (refG := g)
+;;
 
 (* Retourne le prochain état d'une cellule en fonction de son voisinage *)
 let rec next_state listeRules (n,e,s,o,cell) = match listeRules with
@@ -50,11 +49,31 @@ let next_generation sizeGrid a (g : state array array) =
 		generationTemp
 ;;
 
+(* ############################################## *)
+(* AVEC PARSING *)
+(* ############################################## *)
+
+(* Ouverture du fichier *)
+let fichier = "automate.txt";;
+let in_chanel = open_in fichier;;
+
+(* Initialisation des références *)
+let sizeGrid = ref 0;;
+let automaton = ref [];;
+let generationZero = ref ();;
+
+(* Parsing du fichier *)
+saveToRef sizeGrid automaton generationZero (parse in_chanel);;
+
+print_int !sizeGrid;;
+print_newline();;
+
 
 (* ############################################## *)
 (* SANS PARSING DE FICHIER *)
 (* ############################################## *)
 
+(*
 let sizeGrid = 7;;
 
 let rule1 = (A,A,A,A,A);;
@@ -77,3 +96,5 @@ let generationUne = next_generation sizeGrid automaton generationZero;;
 
 show_generation generationZero sizeGrid;;
 show_generation generationUne sizeGrid;;
+
+*)

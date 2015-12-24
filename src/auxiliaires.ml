@@ -60,23 +60,23 @@ let getGenerationZero generationTemp in_chanel sizeGrid =
   let rec getGenerationZeroAuxColums generationTemp in_chanel sizeGrid lNumber =
     if lNumber<sizeGrid then
       begin
-	try
-	  let line = input_line in_chanel in
-	  (*Parcours la ligne et affecte les valeurs*)
-	  let rec getGenerationZeroAuxLine generationTemp in_chanel sizeGrid lNumber cNumber =
-	    if ((length line) = sizeGrid) then
-	      if (cNumber < sizeGrid) then
-		begin
-		  setState generationTemp lNumber cNumber (charToState(get line cNumber));
-		  getGenerationZeroAuxLine generationTemp in_chanel sizeGrid lNumber (cNumber+1);
-		end
-	      else (getGenerationZeroAuxColums generationTemp in_chanel sizeGrid (lNumber+1))
-	    else raise File_structure;
-	  in (getGenerationZeroAuxLine generationTemp in_chanel sizeGrid lNumber 0);
-	with 
-	| End_of_file -> print_string("Fin du fichier.\n"); ();
-	| File_structure -> print_string("Fichier malformé.\n");
-	| e -> close_in_noerr in_chanel; raise e;
+      	try
+      	  let line = input_line in_chanel in
+      	  (*Parcours la ligne et affecte les valeurs*)
+      	  let rec getGenerationZeroAuxLine generationTemp in_chanel sizeGrid lNumber cNumber =
+      	    if ((length line) = sizeGrid) then
+      	      if (cNumber < sizeGrid) then
+      		begin
+      		  setState generationTemp lNumber cNumber (charToState(get line cNumber));
+      		  getGenerationZeroAuxLine generationTemp in_chanel sizeGrid lNumber (cNumber+1);
+      		end
+      	      else (getGenerationZeroAuxColums generationTemp in_chanel sizeGrid (lNumber+1))
+      	    else raise File_structure;
+      	  in (getGenerationZeroAuxLine generationTemp in_chanel sizeGrid lNumber 0);
+      	with 
+      	| End_of_file -> print_string("Fin du fichier.\n"); ();
+      	| File_structure -> print_string("Fichier malformé.\n");
+      	| e -> close_in_noerr in_chanel; raise e;
       end
     else print_string("Fin de la récupération de la générationZero\n");
   in getGenerationZeroAuxColums generationTemp in_chanel sizeGrid 0;
