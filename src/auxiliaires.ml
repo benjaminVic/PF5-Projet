@@ -1,6 +1,7 @@
 open String
 open Types
 open Affichage
+open Formules
 
 (* Transforme un char en state*)
 let charToState s = match s with 
@@ -80,4 +81,36 @@ let getGenerationZero generationTemp in_chanel sizeGrid =
       end
     else print_string("Fin de la récupération de la générationZero\n");
   in getGenerationZeroAuxColums generationTemp in_chanel sizeGrid 0;
+;;
+
+(* Traduit un état en une valeur logique *)
+let stateToFormule s = match s with
+  | A -> VRAI
+  | D -> FAUX
+(* | _ -> failwith("This shouldn't happen") *)
+;;
+
+(* Traduit une rêgle en formule *)
+let ruleToFormule r = match r with
+  | (n,e,s,w,c) -> Et(Et(Et(Et(stateToBoolean n,stateToBoolean e),stateToBoolean s),stateToBoolean w), stateToBoolean c)
+;;
+
+(* Converti un automaton en formule *)
+let rec automatonToFormule automaton = match automaton with
+  | [] -> VRAI
+  | [b] -> ruleToFormule b;
+  | h::t -> Ou(ruleToFormule h, automatonToFormule t);
+;;
+
+(* Génère l'ensemble des variables propositionnelle d'un tableau *)
+let generationToVars gridSize = 
+  let rec generationToVarsAux gridSize cellIdNumber =
+    if cellIdNumber < ((gridSize*gridSize)-1) then Et((generationToVarsAux gridSize (cellIdNumber+1)), Var (string_of_int cellIdNumber))
+    else Var (string_of_int((gridSize*gridSize)-1))
+  in generationToVarsAux gridSize 0
+;;
+
+(* PRODUCE THE STABLES FORMULA *)
+let stables gridSize automaton =
+  Et(generationToVars gridSize, automatonToFormule automaton)
 ;;
