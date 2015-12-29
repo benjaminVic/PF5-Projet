@@ -121,10 +121,6 @@ let generationToVars gridSize automaton =
   in generationToVarsAux gridSize 0 automaton
 ;;
 
-let stables gridSize automaton = 
-  fnc(generationToVars gridSize automaton)
-;;
-
 generationToVars 5 [(A,A,A,A,A);(A,A,A,A,D)];;
 
 (* Liste to string *)

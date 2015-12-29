@@ -45,11 +45,9 @@ let next_generation sizeGrid a (g : state array array) =
 		generationTemp
 ;;
 
-(* PRODUCE THE STABLES FORMULA *)
-let stables gridSize automaton =
-  Et(generationToVars gridSize, automatonToFormule automaton)
+let stables gridSize automaton = 
+  fnc(generationToVars gridSize automaton)
 ;;
-
 
 (* ############################################## *)
 (* PARSING et CREATION *)
