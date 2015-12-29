@@ -13,19 +13,6 @@ let rec string_of_formule f = match f with
   | Ou (f1,f2) -> "("^string_of_formule f1^" OU "^string_of_formule f2^")"
 ;;
 
-let get_number_of_var f = 
-  let number = ref 0 in
-  let rec count f = match f with
-    | VRAI -> number := !number + 1
-    | FAUX -> number := !number + 1
-    | Var v -> number := !number + 1
-    | Neg g -> (count g)
-    | Et (f1,f2) -> (count f1); (count f2)
-    | Ou (f1,f2) -> (count f1); (count f2)
-  in count f;
-  !number
-;;
-
 (*Might have to replace l3 by l1 and l4 by l2*)
 let rec union_sorted l1 l2 = match l1,l2 with
   | _,[] -> l1
