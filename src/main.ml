@@ -14,11 +14,6 @@ let parse in_chanel =
   (gridSize),(rule),(genZero);
 ;;
 
-(* Sauvegarde les éléments du parsing dans des références *)
-let saveToRef refS refA refG = function
-	|(s,a,g) -> (refS := s); (refA := a); (refG := g)
-;;
-
 (* Retourne le prochain état d'une cellule en fonction de son voisinage *)
 let rec next_state listeRules (n,e,s,o,cell) = match listeRules with
 	|[] -> if cell = A then D else cell
