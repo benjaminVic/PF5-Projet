@@ -50,16 +50,6 @@ let stables gridSize automaton =
   Et(generationToVars gridSize, automatonToFormule automaton)
 ;;
 
-let create_dimacs formula_liste out_channel = 
-	output_string out_channel ("p cnf "^(string_of_int (get_nb_var_in_FormulaList formula_liste))^" "^(string_of_int (length formula_liste)));
-	output_string out_channel "\n";
-	let rec print_disjonction = function
-		|[] -> ()
-		|[a] -> output_string out_channel (string_of_StringList (list_of_vars a))
-		|a::t -> (output_string out_channel ((string_of_StringList (list_of_vars a))^"\n")); print_disjonction t;
-	in print_disjonction formula_liste
-;;
-
 
 (* ############################################## *)
 (* PARSING et CREATION *)
@@ -91,14 +81,24 @@ let out_channel = open_out entree_dimacs;;
 let f = stables sizeGrid automaton;;
 (* print_string (string_of_formule f);;*)
 
-(* Transformation en CNF et écriture du fichier dimacs *)
-let liste_Formules = [Ou(Ou(Var("x1"),Var("x2")),Var("x3"));Ou(Var("x4"),Var("x5"))];;
+(* Liste de formules pour TEST *)
+let liste_Formules = [ Var("3") ; Ou(Var("1"),Var("2")) ; Ou(Var("1"),Neg(Var("3"))) ; Ou(Ou(Var("2"),Var("3")), Neg(Var("1"))) ];;
+
+let create_dimacs formula_liste out_channel = 
+	output_string out_channel ("p cnf "^(string_of_int (sizeGrid*sizeGrid))^" "^(string_of_int (length formula_liste)));
+	output_string out_channel "\n";
+	let rec print_disjonction = function
+		|[] -> ()
+		|[a] -> output_string out_channel ((string_of_var_NNF a)^"0")
+		|a::t -> (output_string out_channel ((string_of_var_NNF a)^"0\n")); print_disjonction t;
+	in print_disjonction formula_liste
+;;
 
 (* Affiche résultat minisat *)
 let show_stable ()= 
  create_dimacs liste_Formules out_channel;
-
+ close_out out_channel;
+ Sys.command("minisat entree.dimacs sortie");
 ;;
-
 
 show_stable ();;
