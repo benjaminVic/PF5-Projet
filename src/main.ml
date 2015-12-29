@@ -55,8 +55,8 @@ let create_dimacs formula_liste out_channel =
 	output_string out_channel "\n";
 	let rec print_disjonction = function
 		|[] -> ()
-		|[a] -> output_string out_channel (string_of_StringList (list_of_vars a))
-		|a::t -> (output_string out_channel ((string_of_StringList (list_of_vars a))^"\n")); print_disjonction t;
+		|[a] -> output_string out_channel (string_of_var_NNF a)
+		|a::t -> (output_string out_channel ((string_of_var_NNF a)^"\n")); print_disjonction t;
 	in print_disjonction formula_liste
 ;;
 
@@ -92,13 +92,11 @@ let f = stables sizeGrid automaton;;
 (* print_string (string_of_formule f);;*)
 
 (* Transformation en CNF et écriture du fichier dimacs *)
-let liste_Formules = [Ou(Ou(Var("x1"),Var("x2")),Var("x3"));Ou(Var("x4"),Var("x5"))];;
+let liste_Formules = [Ou(Ou(Var("x1"),Var("x2")),Var("x3"));Ou(Var("x4"),Neg(Var("x5")))];;
 
 (* Affiche résultat minisat *)
 let show_stable ()= 
  create_dimacs liste_Formules out_channel;
-
 ;;
-
 
 show_stable ();;

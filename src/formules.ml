@@ -43,6 +43,14 @@ let rec list_of_vars f = match f with
   | _ -> []
 ;;
 
+let rec string_of_var_NNF = function
+  | Var s -> s^" "
+  | Neg f -> "-"^(string_of_var_NNF f)
+  | Et(f1,f2) -> (string_of_var_NNF f1)^(string_of_var_NNF f2)
+  | Ou(f1,f2) -> (string_of_var_NNF f1)^(string_of_var_NNF f2)
+  | _ -> ""
+;;
+
 let rec eval_formule f e = match f with
   | VRAI -> true
   | FAUX -> false
