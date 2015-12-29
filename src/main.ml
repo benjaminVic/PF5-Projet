@@ -51,7 +51,13 @@ let stables gridSize automaton =
 ;;
 
 let create_dimacs formula_liste out_channel = 
-	()
+	output_string out_channel ("p cnf "^(string_of_int (get_nb_var_in_FormulaList formula_liste))^" "^(string_of_int (length formula_liste)));
+	output_string out_channel "\n";
+	let rec print_disjonction = function
+		|[] -> ()
+		|[a] -> output_string out_channel (string_of_StringList (list_of_vars a))
+		|a::t -> (output_string out_channel ((string_of_StringList (list_of_vars a))^"\n")); print_disjonction t;
+	in print_disjonction formula_liste
 ;;
 
 (* Affiche résultat minisat *)
@@ -65,10 +71,10 @@ let show_stable () =
 
 (* Ouverture du fichier *)
 let fichier_automate = "automate.txt";;
-let in_chanel = open_in fichier_automate;;
+let in_channel = open_in fichier_automate;;
 
 (* Récupération des variables *)
-let sizeGrid, automaton, generationZero = (parse in_chanel);;
+let sizeGrid, automaton, generationZero = (parse in_channel);;
 
 (* Calcul de la prochaine génération *)
 let generationUne = next_generation sizeGrid automaton generationZero;;
@@ -83,10 +89,13 @@ show_generation generationUne sizeGrid;;
 
 (* Ouverture du fichier *)
 let fichier_dimacs = "entree.dimacs";;
-let out_chanel = open_in fichier_dimacs;;
+let out_channel = open_out fichier_dimacs;;
 
 (* Récupération de la formule stable *)
 let f = stables sizeGrid automaton;;
 print_string (string_of_formule f);;
 
 (* Transformation en CNF et écriture du fichier dimacs *)
+let liste_Formules = [Ou(Ou(Var("x1"),Var("x2")),Var("x3"));Ou(Var("x4"),Var("x5"))];;
+
+create_dimacs liste_Formules out_channel;;

@@ -111,4 +111,19 @@ let generationToVars gridSize =
   in generationToVarsAux gridSize 0
 ;;
 
+(* Liste to string *)
+let rec string_of_StringList = function
+  |[] -> ""
+  |[a] -> a
+  |a::t -> a^" "^(string_of_StringList t)
+;;
 
+let get_nb_var_in_FormulaList formula_list = 
+  let nb = ref 0 in
+  let rec count = function
+    |[] -> ()
+    |[a] -> nb := !nb + (get_number_of_var a)
+    |a::t -> nb := (get_number_of_var a); count t
+  in count formula_list;
+  !nb
+;;
