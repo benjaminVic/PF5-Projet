@@ -58,16 +58,12 @@ let fichier = "automate.txt";;
 let in_chanel = open_in fichier;;
 
 (* Initialisation des références *)
-let sizeGrid = ref 0;;
-let automaton = ref [];;
-let generationZero = ref ();;
+let sizeGrid, automaton, generationZero = (parse in_chanel);;
 
-(* Parsing du fichier *)
-saveToRef sizeGrid automaton generationZero (parse in_chanel);;
+let generationUne = next_generation sizeGrid automaton generationZero;;
 
-print_int !sizeGrid;;
-print_newline();;
-
+show_generation generationZero sizeGrid;;
+show_generation generationUne sizeGrid;;
 
 (* ############################################## *)
 (* SANS PARSING DE FICHIER *)

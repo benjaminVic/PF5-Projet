@@ -80,4 +80,5 @@ let getGenerationZero generationTemp in_chanel sizeGrid =
       end
     else print_string("Fin de la récupération de la générationZero\n");
   in getGenerationZeroAuxColums generationTemp in_chanel sizeGrid 0;
+  generationTemp
 ;;
