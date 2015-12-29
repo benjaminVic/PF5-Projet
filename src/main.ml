@@ -45,19 +45,35 @@ let next_generation sizeGrid a (g : state array array) =
 		generationTemp
 ;;
 
+(* PRODUCE THE STABLES FORMULA *)
+let stables gridSize automaton =
+  Et(generationToVars gridSize, automatonToFormule automaton)
+;;
+
+let create_dimacs formula_liste out_channel = 
+	()
+;;
+
+(* Affiche résultat minisat *)
+let show_stable () = 
+	()
+;;
+
 (* ############################################## *)
 (* PARSING et CREATION *)
 (* ############################################## *)
 
 (* Ouverture du fichier *)
-let fichier = "automate.txt";;
-let in_chanel = open_in fichier;;
+let fichier_automate = "automate.txt";;
+let in_chanel = open_in fichier_automate;;
 
-(* Initialisation des références *)
+(* Récupération des variables *)
 let sizeGrid, automaton, generationZero = (parse in_chanel);;
 
+(* Calcul de la prochaine génération *)
 let generationUne = next_generation sizeGrid automaton generationZero;;
 
+(* Affichage des générations 0 et 1 *)
 show_generation generationZero sizeGrid;;
 show_generation generationUne sizeGrid;;
 
@@ -65,5 +81,12 @@ show_generation generationUne sizeGrid;;
 (* FORMULES *)
 (* ############################################## *)
 
+(* Ouverture du fichier *)
+let fichier_dimacs = "entree.dimacs";;
+let out_chanel = open_in fichier_dimacs;;
+
+(* Récupération de la formule stable *)
 let f = stables sizeGrid automaton;;
 print_string (string_of_formule f);;
+
+(* Transformation en CNF et écriture du fichier dimacs *)

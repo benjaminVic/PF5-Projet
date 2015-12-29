@@ -111,7 +111,4 @@ let generationToVars gridSize =
   in generationToVarsAux gridSize 0
 ;;
 
-(* PRODUCE THE STABLES FORMULA *)
-let stables gridSize automaton =
-  Et(generationToVars gridSize, automatonToFormule automaton)
-;;
+
