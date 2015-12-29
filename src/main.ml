@@ -60,10 +60,6 @@ let create_dimacs formula_liste out_channel =
 	in print_disjonction formula_liste
 ;;
 
-(* Affiche résultat minisat *)
-let show_stable () = 
-	()
-;;
 
 (* ############################################## *)
 (* PARSING et CREATION *)
@@ -87,15 +83,22 @@ show_generation generationUne sizeGrid;;
 (* FORMULES *)
 (* ############################################## *)
 
-(* Ouverture du fichier *)
-let fichier_dimacs = "entree.dimacs";;
-let out_channel = open_out fichier_dimacs;;
+let entree_dimacs = "entree.dimacs";;
+let out_channel = open_out entree_dimacs;;
+
 
 (* Récupération de la formule stable *)
 let f = stables sizeGrid automaton;;
-print_string (string_of_formule f);;
+(* print_string (string_of_formule f);;*)
 
 (* Transformation en CNF et écriture du fichier dimacs *)
 let liste_Formules = [Ou(Ou(Var("x1"),Var("x2")),Var("x3"));Ou(Var("x4"),Var("x5"))];;
 
-create_dimacs liste_Formules out_channel;;
+(* Affiche résultat minisat *)
+let show_stable ()= 
+ create_dimacs liste_Formules out_channel;
+
+;;
+
+
+show_stable ();;
