@@ -45,7 +45,7 @@ let next_generation sizeGrid a (g : state array array) =
 ;;
 
 (* ############################################## *)
-(* AVEC PARSING *)
+(* PARSING et CREATION *)
 (* ############################################## *)
 
 (* Ouverture du fichier *)
@@ -61,31 +61,8 @@ show_generation generationZero sizeGrid;;
 show_generation generationUne sizeGrid;;
 
 (* ############################################## *)
-(* SANS PARSING DE FICHIER *)
+(* FORMULES *)
 (* ############################################## *)
 
-(*
-let sizeGrid = 7;;
-
-let rule1 = (A,A,A,A,A);;
-let rule2 = (A,A,A,A,D);;
-let rule3 = (A,A,A,D,A);;
-let rule4 = (A,A,A,D,D);;
-
-let automaton = rule1::rule2::rule3::rule4::[];;
-
-let generationZero = Array.make_matrix 7 7 A;; 
-setState generationZero 0 0 D;;
-setState generationZero 1 1 D;;
-setState generationZero 2 2 D;;
-setState generationZero 3 3 D;;
-setState generationZero 4 4 D;;
-setState generationZero 5 5 D;;
-setState generationZero 6 6 D;;
-
-let generationUne = next_generation sizeGrid automaton generationZero;;
-
-show_generation generationZero sizeGrid;;
-show_generation generationUne sizeGrid;;
-
-*)
+let f = stables gridSize automaton;;
+print_string (string_of_formule f);;

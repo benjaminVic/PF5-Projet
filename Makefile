@@ -13,6 +13,11 @@ all:
 	ocamlc -I $(SRC_PATH) $(SRC_PATH)affichage.mli
 	ocamlc -I $(SRC_PATH) -c $(SRC_PATH)affichage.ml
 
+	# Compilation du module formules
+	ocamlc -I $(SRC_PATH) -i $(SRC_PATH)formules.ml > $(SRC_PATH)formules.mli
+	ocamlc -I $(SRC_PATH) $(SRC_PATH)formules.mli
+	ocamlc -I $(SRC_PATH) -c $(SRC_PATH)formules.ml
+
 	# Compilation du module auxiliaires
 	ocamlc -I $(SRC_PATH) -i $(SRC_PATH)auxiliaires.ml > $(SRC_PATH)auxiliaires.mli
 	ocamlc -I $(SRC_PATH) $(SRC_PATH)auxiliaires.mli
