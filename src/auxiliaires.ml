@@ -1,7 +1,7 @@
 open String
 open Types
 open Affichage
-#use "formules.ml"
+open Formules
 
 (* Transforme un char en state*)
 let charToState s = match s with 
@@ -102,7 +102,7 @@ let ruleToFormule r cellIdNumber gridSize = match r with
 ;;
 
 (* Converti un automaton en formule *)
-let rec automatonToFormule automaton cellIdNumber= match automaton with
+let rec automatonToFormule automaton cellIdNumber = match automaton with
   | [] -> VRAI
   | [b] -> ruleToFormule b cellIdNumber;
   | h::t -> Ou(ruleToFormule h cellIdNumber, automatonToFormule t cellIdNumber);
