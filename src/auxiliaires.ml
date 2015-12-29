@@ -102,10 +102,10 @@ let ruleToFormule r cellIdNumber gridSize = match r with
 ;;
 
 (* Converti un automaton en formule *)
-let rec automatonToFormule automaton cellIdNumber = match automaton with
+let rec automatonToFormule automaton cellIdNumber gridSize = match automaton with
   | [] -> VRAI
-  | [b] -> ruleToFormule b cellIdNumber;
-  | h::t -> Ou(ruleToFormule h cellIdNumber, automatonToFormule t cellIdNumber);
+  | [b] -> ruleToFormule b cellIdNumber gridSize;
+  | h::t -> Ou(ruleToFormule h cellIdNumber gridSize, automatonToFormule t cellIdNumber gridSize);
 ;;
 
 let generationToVars gridSize automaton = 
@@ -113,11 +113,11 @@ let generationToVars gridSize automaton =
     if cellIdNumber < ((gridSize*gridSize)-1) then 
       Et((generationToVarsAux gridSize (cellIdNumber+1) automaton), 
         Ou(
-              Et(Var (string_of_int cellIdNumber), automatonToFormule automaton cellIdNumber), 
-          Neg(Et(Var (string_of_int cellIdNumber), automatonToFormule automaton cellIdNumber))
+              Et(Var (string_of_int cellIdNumber), automatonToFormule automaton cellIdNumber gridSize), 
+          Neg(Et(Var (string_of_int cellIdNumber), automatonToFormule automaton cellIdNumber gridSize))
           )
       )
-    else Et(Var (string_of_int((gridSize*gridSize)-1)), automatonToFormule automaton cellIdNumber)
+    else Et(Var (string_of_int((gridSize*gridSize)-1)), automatonToFormule automaton cellIdNumber gridSize)
   in generationToVarsAux gridSize 0 automaton
 ;;
 
