@@ -1,7 +1,7 @@
 open String
 open Types
 open Affichage
-open Formules
+#use "formules.ml"
 
 (* Transforme un char en state*)
 let charToState s = match s with 
@@ -85,31 +85,47 @@ let getGenerationZero generationTemp in_chanel sizeGrid =
 ;;
 
 (* Traduit un état en une valeur logique *)
-let stateToFormule s = match s with
-  | A -> VRAI
-  | D -> FAUX
+let stateToFormule s direction= match s with
+  | A -> Var direction
+  | D -> Neg(Var direction)
 (* | _ -> failwith("This shouldn't happen") *)
 ;;
 
 (* Traduit une rêgle en formule *)
-let ruleToFormule r = match r with
-  | (n,e,s,w,c) -> Et(Et(Et(Et(stateToFormule n,stateToFormule e),stateToFormule s),stateToFormule w), stateToFormule c)
+let ruleToFormule r cellIdNumber gridSize = match r with
+  | (n,e,s,w,c) -> Et(Et(Et(Et(
+    stateToFormule n (string_of_int (if (cellIdNumber-gridSize)<0 then (((gridSize*gridSize)-gridSize)+cellIdNumber)  else (cellIdNumber-gridSize))),
+    stateToFormule e (string_of_int (if (cellIdNumber+1) mod gridSize = 0 then (cellIdNumber-gridSize+1) else (cellIdNumber+1)) )),
+    stateToFormule s (string_of_int (if (cellIdNumber+gridSize)>=(gridSize*gridSize) then (cellIdNumber mod gridSize)  else (cellIdNumber+gridSize)))),
+    stateToFormule w (string_of_int (if ((cellIdNumber-1) mod gridSize = (gridSize-1) || (cellIdNumber-1)<0 ) then (cellIdNumber+gridSize-1) else (cellIdNumber-1)) )), 
+    stateToFormule c (string_of_int cellIdNumber))
 ;;
 
 (* Converti un automaton en formule *)
-let rec automatonToFormule automaton = match automaton with
+let rec automatonToFormule automaton cellIdNumber= match automaton with
   | [] -> VRAI
-  | [b] -> ruleToFormule b;
-  | h::t -> Ou(ruleToFormule h, automatonToFormule t);
+  | [b] -> ruleToFormule b cellIdNumber;
+  | h::t -> Ou(ruleToFormule h cellIdNumber, automatonToFormule t cellIdNumber);
 ;;
 
-(* Génère l'ensemble des variables propositionnelle d'un tableau *)
-let generationToVars gridSize = 
-  let rec generationToVarsAux gridSize cellIdNumber =
-    if cellIdNumber < ((gridSize*gridSize)-1) then Et((generationToVarsAux gridSize (cellIdNumber+1)), Var (string_of_int cellIdNumber))
-    else Var (string_of_int((gridSize*gridSize)-1))
-  in generationToVarsAux gridSize 0
+let generationToVars gridSize automaton = 
+  let rec generationToVarsAux gridSize cellIdNumber automaton =
+    if cellIdNumber < ((gridSize*gridSize)-1) then 
+      Et((generationToVarsAux gridSize (cellIdNumber+1) automaton), 
+        Ou(
+              Et(Var (string_of_int cellIdNumber), automatonToFormule automaton cellIdNumber), 
+          Neg(Et(Var (string_of_int cellIdNumber), automatonToFormule automaton cellIdNumber))
+          )
+      )
+    else Et(Var (string_of_int((gridSize*gridSize)-1)), automatonToFormule automaton cellIdNumber)
+  in generationToVarsAux gridSize 0 automaton
 ;;
+
+let stables gridSize automaton = 
+  fnc(generationToVars gridSize automaton)
+;;
+
+generationToVars 5 [(A,A,A,A,A);(A,A,A,A,D)];;
 
 (* Liste to string *)
 let rec string_of_StringList = function
