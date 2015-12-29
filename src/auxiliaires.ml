@@ -93,7 +93,7 @@ let stateToFormule s = match s with
 
 (* Traduit une rêgle en formule *)
 let ruleToFormule r = match r with
-  | (n,e,s,w,c) -> Et(Et(Et(Et(stateToBoolean n,stateToBoolean e),stateToBoolean s),stateToBoolean w), stateToBoolean c)
+  | (n,e,s,w,c) -> Et(Et(Et(Et(stateToFormule n,stateToFormule e),stateToFormule s),stateToFormule w), stateToFormule c)
 ;;
 
 (* Converti un automaton en formule *)

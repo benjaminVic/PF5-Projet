@@ -4,6 +4,7 @@ open List
 open Types
 open Affichage
 open Auxiliaires
+open Formules
 
 (* Construit l'automate contenu dans le fichier *)
 let parse in_chanel = 
@@ -64,5 +65,5 @@ show_generation generationUne sizeGrid;;
 (* FORMULES *)
 (* ############################################## *)
 
-let f = stables gridSize automaton;;
+let f = stables sizeGrid automaton;;
 print_string (string_of_formule f);;
