@@ -78,7 +78,7 @@ let in_channel = open_in sortie_dimacs;;
 
 (* Récupération de la formule stable *)
 let f = stables sizeGrid automaton;;
-(*let fTest = Et(Et(Et( Ou(Ou(Var("2"),Var("3")), Neg(Var("1"))) ,Ou(Var("1"),Neg(Var("3")))), Ou(Var("1"),Var("2")) ), Var("3"));;*)
+(* let fTest = Et(Et(Et( Ou(Ou(Var("2"),Var("3")), Neg(Var("1"))) ,Ou(Var("1"),Neg(Var("3")))), Ou(Var("1"),Var("2")) ), Var("3"));; *)
 
 (* Mise sous forme de liste de disjonctions *)
 let liste_Formules = cnf_to_disjonctionListe f;;
@@ -98,9 +98,9 @@ let create_dimacs formula_liste out_channel =
 let show_stable ()= 
 	create_dimacs liste_Formules out_channel;
 	close_out out_channel;
-	Sys.command("minisat entree.dimacs sortie");
+	Sys.command("minisat -verb=0 entree.dimacs sortie");
 	if (String.compare (input_line in_channel) "UNSAT") = 0 then print_string "Il n'y a plus de générations stables.\n"
-	else print_string (input_line in_channel);
+	else print_string ((input_line in_channel)^"\n");
 ;;
 
 show_stable ();;
