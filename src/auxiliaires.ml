@@ -94,11 +94,11 @@ let stateToFormule s direction= match s with
 (* Traduit une rêgle en formule *)
 let ruleToFormule r cellIdNumber gridSize = match r with
   | (n,e,s,w,c) -> Et(Et(Et(Et(
-    stateToFormule n (string_of_int (if (cellIdNumber-gridSize)<0 then (((gridSize*gridSize)-gridSize)+cellIdNumber)  else (cellIdNumber-gridSize))),
-    stateToFormule e (string_of_int (if (cellIdNumber+1) mod gridSize = 0 then (cellIdNumber-gridSize+1) else (cellIdNumber+1)) )),
-    stateToFormule s (string_of_int (if (cellIdNumber+gridSize)>=(gridSize*gridSize) then (cellIdNumber mod gridSize)  else (cellIdNumber+gridSize)))),
-    stateToFormule w (string_of_int (if ((cellIdNumber-1) mod gridSize = (gridSize-1) || (cellIdNumber-1)<0 ) then (cellIdNumber+gridSize-1) else (cellIdNumber-1)) )), 
-    stateToFormule c (string_of_int cellIdNumber))
+    stateToFormule n (string_of_int (if (cellIdNumber-gridSize)<0 then (((gridSize*gridSize)-gridSize)+cellIdNumber)+1  else (cellIdNumber-gridSize)+1)),
+    stateToFormule e (string_of_int (if (cellIdNumber+1) mod gridSize = 0 then (cellIdNumber-gridSize+1)+1 else (cellIdNumber+1)+1) )),
+    stateToFormule s (string_of_int (if (cellIdNumber+gridSize)>=(gridSize*gridSize) then (cellIdNumber mod gridSize)+1 else (cellIdNumber+gridSize)+1))),
+    stateToFormule w (string_of_int (if ((cellIdNumber-1) mod gridSize = (gridSize-1) || (cellIdNumber-1)<0 ) then (cellIdNumber+gridSize-1)+1 else (cellIdNumber-1)+1) )), 
+    stateToFormule c (string_of_int (cellIdNumber+1)))
 ;;
 
 (* Converti un automaton en formule *)
@@ -113,11 +113,11 @@ let generationToVars gridSize automaton =
     if cellIdNumber < ((gridSize*gridSize)-1) then 
       Et((generationToVarsAux gridSize (cellIdNumber+1) automaton), 
         Ou(
-              Et(Var (string_of_int cellIdNumber), automatonToFormule automaton cellIdNumber gridSize), 
-          Neg(Et(Var (string_of_int cellIdNumber), automatonToFormule automaton cellIdNumber gridSize))
+              Et(Var (string_of_int (cellIdNumber+1)), automatonToFormule automaton cellIdNumber gridSize), 
+          Neg(Et(Var (string_of_int (cellIdNumber+1)), automatonToFormule automaton cellIdNumber gridSize))
           )
       )
-    else Et(Var (string_of_int((gridSize*gridSize)-1)), automatonToFormule automaton cellIdNumber gridSize)
+    else Et(Var (string_of_int((gridSize*gridSize)-1+1)), automatonToFormule automaton cellIdNumber gridSize)
   in generationToVarsAux gridSize 0 automaton
 ;;
 
