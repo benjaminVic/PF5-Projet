@@ -97,34 +97,42 @@ let create_dimacs formula_liste out_channel =
 
 (* Affiche les résultats minisat *)
 let show_stable () = 
-	(* Ouverture et écriture du fichier *)
-	let out_channel = open_out entree_dimacs in
-	let in_channel = open_in sortie_dimacs in
+	try
+		while true do
+			begin
 
-	create_dimacs liste_Formules out_channel;
-	close_out out_channel;
+			(* Ouverture et écriture du fichier *)
+			let out_channel = open_out entree_dimacs in
+			let in_channel = open_in sortie_dimacs in
 
-	(* Execution de minisat *)
-	Sys.command "minisat -verb=0 entree.dimacs sortie";
+			create_dimacs liste_Formules out_channel;
+			close_out out_channel;
 
-	(* Lecture du résultat *)
-	if (String.compare (input_line in_channel) "UNSAT") = 0 then 
-		begin 
-			print_string "Il n'y a plus de générations stables.\n";
-			raise Exit
-		end
-	else 
-		begin
-			(* Sauvegarde de la solution et affichage *)
-			let line = (input_line in_channel) in 
-			let splitLine = Str.split (Str.regexp " ") line in
-			liste_memo_clauses := (string_of_StringList (negative_string_liste splitLine))::!liste_memo_clauses;
-			print_string (line^"\n");	
+			(* Execution de minisat *)
+			Sys.command "minisat -verb=0 entree.dimacs sortie";
 
-			
-			print_string "Voulez-vous continuer à chercher ? (y/n)\n";
-			(*if String.compare (input_line stdin) "y" != 0 then raise Exit*)
-		end;
+			(* Lecture du résultat *)
+			if (String.compare (input_line in_channel) "UNSAT") = 0 then 
+				begin 
+					print_string "Il n'y a plus de générations stables.\n";
+					raise Exit
+				end
+			else 
+				begin
+					(* Sauvegarde de la solution et affichage *)
+					let line = (input_line in_channel) in 
+					let splitLine = Str.split (Str.regexp " ") line in
+					liste_memo_clauses := (string_of_StringList (negative_string_liste splitLine))::!liste_memo_clauses;
+					print_string (line^"\n");	
+				end;
+
+				print_string "Voulez-vous continuer à chercher ? (y/n)\n";
+				let l = read_line() in 
+				if String.compare l "y" != 0 then raise Exit
+
+			end
+		done
+	with Exit -> ()
 ;;
 
 show_stable ();;
