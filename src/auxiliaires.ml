@@ -121,7 +121,7 @@ let generationToVars gridSize automaton =
   in generationToVarsAux gridSize 0 automaton
 ;;
 
-generationToVars 5 [(A,A,A,A,A);(A,A,A,A,D)];;
+(* generationToVars 5 [(A,A,A,A,A);(A,A,A,A,D)];;*)
 
 (* Liste to string *)
 let rec string_of_StringList = function
@@ -129,3 +129,13 @@ let rec string_of_StringList = function
   |[a] -> a
   |a::t -> a^" "^(string_of_StringList t)
 ;;
+
+(* CNF to ListeFormule *)
+let rec cnf_to_disjonctionListe f = match f with
+  |Var(_) as v -> [v]
+  |Neg(_) as g -> [g]
+  |Ou(_,_) as f -> [f]
+  |Et(a,b) -> b::(cnf_to_disjonctionListe a)
+;;
+
+

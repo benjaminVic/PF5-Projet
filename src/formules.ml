@@ -13,6 +13,12 @@ let rec string_of_formule f = match f with
   | Ou (f1,f2) -> "("^string_of_formule f1^" OU "^string_of_formule f2^")"
 ;;
 
+let rec printListeFormule l = match l with
+  |[] -> print_string ""
+  |[a] -> print_string ((string_of_formule a)^"\n")
+  |a::t -> print_string ((string_of_formule a)^"\n"); (printListeFormule t)
+;;
+
 (*Might have to replace l3 by l1 and l4 by l2*)
 let rec union_sorted l1 l2 = match l1,l2 with
   | _,[] -> l1
