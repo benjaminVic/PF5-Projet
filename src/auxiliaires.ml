@@ -132,6 +132,8 @@ let rec string_of_StringList = function
 
 (* CNF to ListeFormule *)
 let rec cnf_to_disjonctionListe f = match f with
+  |VRAI -> [VRAI]
+  |FAUX -> [FAUX]
   |Var(_) as v -> [v]
   |Neg(_) as g -> [g]
   |Ou(_,_) as f -> [f]

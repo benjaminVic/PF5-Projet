@@ -72,7 +72,9 @@ show_generation generationUne sizeGrid;;
 (* ############################################## *)
 
 let entree_dimacs = "entree.dimacs";;
+let sortie_dimacs = "sortie";;
 let out_channel = open_out entree_dimacs;;
+let in_channel = open_in sortie_dimacs;;
 
 (* Récupération de la formule stable *)
 let f = stables sizeGrid automaton;;
@@ -94,9 +96,11 @@ let create_dimacs formula_liste out_channel =
 
 (* Affiche résultat minisat *)
 let show_stable ()= 
- create_dimacs liste_Formules out_channel;
- close_out out_channel;
- Sys.command("minisat entree.dimacs sortie");
+	create_dimacs liste_Formules out_channel;
+	close_out out_channel;
+	Sys.command("minisat entree.dimacs sortie");
+	if (String.compare (input_line in_channel) "UNSAT") = 0 then print_string "Il n'y a plus de générations stables.\n"
+	else print_string (input_line in_channel);
 ;;
 
 show_stable ();;
