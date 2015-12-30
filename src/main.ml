@@ -74,18 +74,16 @@ show_generation generationUne sizeGrid;;
 let entree_dimacs = "entree.dimacs";;
 let out_channel = open_out entree_dimacs;;
 
-
 (* Récupération de la formule stable *)
 let f = stables sizeGrid automaton;;
+(*let fTest = Et(Et(Et( Ou(Ou(Var("2"),Var("3")), Neg(Var("1"))) ,Ou(Var("1"),Neg(Var("3")))), Ou(Var("1"),Var("2")) ), Var("3"));;*)
+
 (* Mise sous forme de liste de disjonctions *)
 let liste_Formules = cnf_to_disjonctionListe f;;
-(*print_string (string_of_formule f);;*)
 
-(* Liste de formules pour TEST *)
-(*let liste_Formules = [ Var("3") ; Ou(Var("1"),Var("2")) ; Ou(Var("1"),Neg(Var("3"))) ; Ou(Ou(Var("2"),Var("3")), Neg(Var("1"))) ];;*)
 
 let create_dimacs formula_liste out_channel = 
-	output_string out_channel ("p cnf "^(string_of_int ((sizeGrid*sizeGrid)-1))^" "^(string_of_int (length formula_liste)));
+	output_string out_channel ("p cnf "^(string_of_int (sizeGrid*sizeGrid))^" "^(string_of_int (length formula_liste)));
 	output_string out_channel "\n";
 	let rec print_disjonction = function
 		|[] -> ()
