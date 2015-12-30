@@ -80,7 +80,7 @@ let liste_memo_clauses = ref [];;
 let f = stables sizeGrid automaton;;
 (* Mise sous forme de liste de disjonctions *)
 let fTest = Et(Et(Et( Ou(Ou(Var("2"),Var("3")), Neg(Var("1"))) ,Ou(Var("1"),Neg(Var("3")))), Ou(Var("1"),Var("2")) ), Var("3"));;
-let liste_Formules = cnf_to_disjonctionListe fTest;;
+let liste_Formules = cnf_to_disjonctionListe f;;
 
 (* Crétion du fichier entree.dimacs *)
 let create_dimacs formula_liste out_channel = 
@@ -97,41 +97,34 @@ let create_dimacs formula_liste out_channel =
 
 (* Affiche les résultats minisat *)
 let show_stable () = 
-	try
-		while true do
-			begin
-				
-				(* Ouverture et écriture du fichier *)
-				let out_channel = open_out entree_dimacs in
-				let in_channel = open_in sortie_dimacs in
+	(* Ouverture et écriture du fichier *)
+	let out_channel = open_out entree_dimacs in
+	let in_channel = open_in sortie_dimacs in
 
-				create_dimacs liste_Formules out_channel;
-				close_out out_channel;
+	create_dimacs liste_Formules out_channel;
+	close_out out_channel;
 
-				(* Execution de minisat *)
-				Sys.command "minisat -verb=0 entree.dimacs sortie";
+	(* Execution de minisat *)
+	Sys.command "minisat -verb=0 entree.dimacs sortie";
 
-				(* Lecture du résultat *)
-				if (String.compare (input_line in_channel) "UNSAT") = 0 then 
-					begin 
-						print_string "Il n'y a plus de générations stables.\n";
-						raise Exit
-					end
-				else 
-					begin
-						(* Sauvegarde de la solution et affichage *)
-						let line = (input_line in_channel) in 
-						let splitLine = Str.split (Str.regexp " ") line in
-						liste_memo_clauses := (string_of_StringList (negative_string_liste splitLine))::!liste_memo_clauses;
-						print_string (line^"\n");	
+	(* Lecture du résultat *)
+	if (String.compare (input_line in_channel) "UNSAT") = 0 then 
+		begin 
+			print_string "Il n'y a plus de générations stables.\n";
+			raise Exit
+		end
+	else 
+		begin
+			(* Sauvegarde de la solution et affichage *)
+			let line = (input_line in_channel) in 
+			let splitLine = Str.split (Str.regexp " ") line in
+			liste_memo_clauses := (string_of_StringList (negative_string_liste splitLine))::!liste_memo_clauses;
+			print_string (line^"\n");	
 
-						
-						print_string "Voulez-vous continuer à chercher ? (y/n)\n";
-						(*if String.compare (input_line stdin) "y" != 0 then raise Exit*)
-					end;
-			end
-		done
-	with Exit -> ();
+			
+			print_string "Voulez-vous continuer à chercher ? (y/n)\n";
+			(*if String.compare (input_line stdin) "y" != 0 then raise Exit*)
+		end;
 ;;
 
 show_stable ();;
