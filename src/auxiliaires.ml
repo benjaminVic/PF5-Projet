@@ -117,7 +117,11 @@ let generationToVars gridSize automaton =
           Neg(Et(Var (string_of_int (cellIdNumber+1)), automatonToFormule automaton cellIdNumber gridSize))
           )
       )
-    else automatonToFormule automaton cellIdNumber gridSize
+    else
+      Ou(
+        Et(Var (string_of_int (cellIdNumber+1)), automatonToFormule automaton cellIdNumber gridSize), 
+        Neg(Et(Var (string_of_int (cellIdNumber+1)), automatonToFormule automaton cellIdNumber gridSize))
+      )
   in generationToVarsAux gridSize 0 automaton
 ;;
 

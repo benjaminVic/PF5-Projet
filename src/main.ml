@@ -103,3 +103,9 @@ let show_stable ()=
 ;;
 
 show_stable ();;
+
+(* TEST
+let ftest = generationToVars 2 [A,A,A,A,A];;
+let liste = cnf_to_disjonctionListe ftest;;
+printListeFormule liste;;
+*)
