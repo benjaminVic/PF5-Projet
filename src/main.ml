@@ -93,15 +93,10 @@ let create_dimacs formula_liste out_channel =
 	in print_disjonction formula_liste
 ;;
 
-let rec negative_string_liste = function
-	|[] -> []
-	|[a] when String.compare a "0" = 0 -> [a]
-	|[a] when String.compare a "0" != 0 -> if String.compare (String.sub a 0 1) "-" = 0 then [String.sub a 1 ((String.length a)-1)] else ["-"^a]
-	|a::t -> (negative_string_liste [a])@(negative_string_liste t)
-;;
+let liste_memo_clauses = ref [];;
 
 (* Affiche résultat minisat *)
-let show_stable ()= 
+let show_stable () = 
 	create_dimacs liste_Formules out_channel;
 	close_out out_channel;
 	Sys.command("minisat -verb=0 entree.dimacs sortie");
@@ -110,7 +105,8 @@ let show_stable ()=
 		begin
 			let line = (input_line in_channel) in 
 			let splitLine = Str.split (Str.regexp " ") line in
-			print_string ((string_of_StringList (negative_string_liste splitLine))^"\n");
+			liste_memo_clauses := (string_of_StringList (negative_string_liste splitLine))::!liste_memo_clauses;
+			print_string (line^"\n");
 		end
 ;;
 

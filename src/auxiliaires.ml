@@ -144,5 +144,12 @@ let rec cnf_to_disjonctionListe f = match f with
   |Et(a,b) -> b::(cnf_to_disjonctionListe a)
 ;;
 
+let rec negative_string_liste = function
+  |[] -> []
+  |[a] when String.compare a "0" = 0 -> [a]
+  |[a] when String.compare a "0" != 0 -> if String.compare (String.sub a 0 1) "-" = 0 then [String.sub a 1 ((String.length a)-1)] else ["-"^a]
+  |a::t -> (negative_string_liste [a])@(negative_string_liste t)
+;;
+
 
 
