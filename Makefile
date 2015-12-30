@@ -25,7 +25,7 @@ all:
 
 	# Compilation du module main
 	ocamlc -I $(SRC_PATH) -c $(SRC_PATH)main.ml
-	ocamlc -I $(SRC_PATH) -o $(BIN_PATH)$(EXEC) types.cmo affichage.cmo formules.cmo auxiliaires.cmo main.cmo
+	ocamlc -I $(SRC_PATH) -o $(BIN_PATH)$(EXEC) str.cma types.cmo affichage.cmo formules.cmo auxiliaires.cmo main.cmo
 
 	# Clean du dossier /src
 	make clean

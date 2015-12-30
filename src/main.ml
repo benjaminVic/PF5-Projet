@@ -78,10 +78,10 @@ let in_channel = open_in sortie_dimacs;;
 
 (* Récupération de la formule stable *)
 let f = stables sizeGrid automaton;;
-(* let fTest = Et(Et(Et( Ou(Ou(Var("2"),Var("3")), Neg(Var("1"))) ,Ou(Var("1"),Neg(Var("3")))), Ou(Var("1"),Var("2")) ), Var("3"));; *)
+let fTest = Et(Et(Et( Ou(Ou(Var("2"),Var("3")), Neg(Var("1"))) ,Ou(Var("1"),Neg(Var("3")))), Ou(Var("1"),Var("2")) ), Var("3"));;
 
 (* Mise sous forme de liste de disjonctions *)
-let liste_Formules = cnf_to_disjonctionListe f;;
+let liste_Formules = cnf_to_disjonctionListe fTest;;
 
 let create_dimacs formula_liste out_channel = 
 	output_string out_channel ("p cnf "^(string_of_int (sizeGrid*sizeGrid))^" "^(string_of_int (length formula_liste)));
@@ -93,13 +93,25 @@ let create_dimacs formula_liste out_channel =
 	in print_disjonction formula_liste
 ;;
 
+let rec negative_string_liste = function
+	|[] -> []
+	|[a] when String.compare a "0" = 0 -> [a]
+	|[a] when String.compare a "0" != 0 -> if String.compare (String.sub a 0 1) "-" = 0 then [String.sub a 1 ((String.length a)-1)] else ["-"^a]
+	|a::t -> (negative_string_liste [a])@(negative_string_liste t)
+;;
+
 (* Affiche résultat minisat *)
 let show_stable ()= 
 	create_dimacs liste_Formules out_channel;
 	close_out out_channel;
 	Sys.command("minisat -verb=0 entree.dimacs sortie");
 	if (String.compare (input_line in_channel) "UNSAT") = 0 then print_string "Il n'y a plus de générations stables.\n"
-	else print_string ((input_line in_channel)^"\n");
+	else 
+		begin
+			let line = (input_line in_channel) in 
+			let splitLine = Str.split (Str.regexp " ") line in
+			print_string ((string_of_StringList (negative_string_liste splitLine))^"\n");
+		end
 ;;
 
 show_stable ();;
