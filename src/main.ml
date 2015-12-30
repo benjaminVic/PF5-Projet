@@ -74,8 +74,6 @@ show_generation generationUne sizeGrid;;
 let entree_dimacs = "entree.dimacs";;
 let sortie_dimacs = "sortie";;
 
-let in_channel = open_in sortie_dimacs;;
-
 let liste_memo_clauses = ref [];;
 
 (* Récupération de la formule stable *)
@@ -86,20 +84,23 @@ let liste_Formules = cnf_to_disjonctionListe fTest;;
 
 (* Crétion du fichier entree.dimacs *)
 let create_dimacs formula_liste out_channel = 
-	output_string out_channel ("p cnf "^(string_of_int (sizeGrid*sizeGrid))^" "^(string_of_int (length formula_liste)));
+	output_string out_channel ("p cnf "^(string_of_int (sizeGrid*sizeGrid))^" "^(string_of_int ((length formula_liste)+ (length !liste_memo_clauses)) ));
 	output_string out_channel "\n";
 	let rec print_disjonction = function
 		|[] -> ()
 		|[a] -> output_string out_channel ((string_of_var_NNF a)^"0")
 		|a::t -> (output_string out_channel ((string_of_var_NNF a)^"0\n")); print_disjonction t;
 	in print_disjonction formula_liste;
-	write_solutions_to_files out_channel;
+	output_string out_channel "\n";
+	write_solutions_to_files out_channel !liste_memo_clauses;
 ;;
 
 (* Affiche les résultats minisat *)
 let show_stable () = 
 	(* Ouverture et écriture du fichier *)
 	let out_channel = open_out entree_dimacs in
+	let in_channel = open_in sortie_dimacs in
+
 	create_dimacs liste_Formules out_channel;
 	close_out out_channel;
 
@@ -118,7 +119,8 @@ let show_stable () =
 			let splitLine = Str.split (Str.regexp " ") line in
 			liste_memo_clauses := (string_of_StringList (negative_string_liste splitLine))::!liste_memo_clauses;
 			print_string (line^"\n");
-		end
+			
+		end;
 ;;
 
 show_stable ();;
