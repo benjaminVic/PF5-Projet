@@ -118,9 +118,17 @@ let show_stable () =
 			let line = (input_line in_channel) in 
 			let splitLine = Str.split (Str.regexp " ") line in
 			liste_memo_clauses := (string_of_StringList (negative_string_liste splitLine))::!liste_memo_clauses;
-			print_string (line^"\n");
-			
+			print_string (line^"\n");	
 		end;
+
+	try
+		while true do
+			begin
+				print_string "Voulez-vous continuer à chercher ? (y/n)\n";
+				if String.compare (input_line stdin) "y" != 0 then raise Exit
+			end
+		done
+	with Exit -> ();
 ;;
 
 show_stable ();;
