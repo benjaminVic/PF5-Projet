@@ -144,6 +144,7 @@ let rec cnf_to_disjonctionListe f = match f with
   |Et(a,b) -> b::(cnf_to_disjonctionListe a)
 ;;
 
+(* Permet l'inversion de tout les signes *)
 let rec negative_string_liste = function
   |[] -> []
   |[a] when String.compare a "0" = 0 -> [a]
@@ -151,6 +152,7 @@ let rec negative_string_liste = function
   |a::t -> (negative_string_liste [a])@(negative_string_liste t)
 ;;
 
+(* Ecrit la liste des solutions trouées *)
 let rec write_solutions_to_files out_channel = function
   |[] -> ()
   |[a] -> output_string out_channel (a^"\n")

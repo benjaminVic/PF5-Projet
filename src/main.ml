@@ -1,6 +1,5 @@
 open String
 open List
-
 open Types
 open Affichage
 open Auxiliaires
@@ -45,6 +44,7 @@ let next_generation sizeGrid a (g : state array array) =
 		generationTemp
 ;;
 
+(* Récupère la formule de stabilité *)
 let stables gridSize automaton = 
   fnc(generationToVars gridSize automaton)
 ;;
@@ -79,8 +79,11 @@ let liste_memo_clauses = ref [];;
 (* Récupération de la formule stable *)
 let f = stables sizeGrid automaton;;
 (* Mise sous forme de liste de disjonctions *)
-let fTest = Et(Et(Et( Ou(Ou(Var("2"),Var("3")), Neg(Var("1"))) ,Ou(Var("1"),Neg(Var("3")))), Ou(Var("1"),Var("2")) ), Var("3"));;
 let liste_Formules = cnf_to_disjonctionListe f;;
+
+(*
+let fTest = Et(Et(Et( Ou(Ou(Var("2"),Var("3")), Neg(Var("1"))) ,Ou(Var("1"),Neg(Var("3")))), Ou(Var("1"),Var("2")) ), Var("3"));;
+*)
 
 (* Crétion du fichier entree.dimacs *)
 let create_dimacs formula_liste out_channel = 
