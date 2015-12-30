@@ -83,7 +83,6 @@ let f = stables sizeGrid automaton;;
 (* Mise sous forme de liste de disjonctions *)
 let liste_Formules = cnf_to_disjonctionListe f;;
 
-
 let create_dimacs formula_liste out_channel = 
 	output_string out_channel ("p cnf "^(string_of_int (sizeGrid*sizeGrid))^" "^(string_of_int (length formula_liste)));
 	output_string out_channel "\n";
