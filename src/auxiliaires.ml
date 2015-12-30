@@ -151,5 +151,11 @@ let rec negative_string_liste = function
   |a::t -> (negative_string_liste [a])@(negative_string_liste t)
 ;;
 
+let rec write_solutions_to_files out_channel = function
+  |[] -> ()
+  |[a] -> output_string out_channel (a^"\n")
+  |a::t -> output_string out_channel (a^"\n"); write_solutions_to_files out_channel t
+;;
+
 
 

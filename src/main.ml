@@ -73,16 +73,18 @@ show_generation generationUne sizeGrid;;
 
 let entree_dimacs = "entree.dimacs";;
 let sortie_dimacs = "sortie";;
-let out_channel = open_out entree_dimacs;;
+
 let in_channel = open_in sortie_dimacs;;
+
+let liste_memo_clauses = ref [];;
 
 (* Récupération de la formule stable *)
 let f = stables sizeGrid automaton;;
-let fTest = Et(Et(Et( Ou(Ou(Var("2"),Var("3")), Neg(Var("1"))) ,Ou(Var("1"),Neg(Var("3")))), Ou(Var("1"),Var("2")) ), Var("3"));;
-
 (* Mise sous forme de liste de disjonctions *)
+let fTest = Et(Et(Et( Ou(Ou(Var("2"),Var("3")), Neg(Var("1"))) ,Ou(Var("1"),Neg(Var("3")))), Ou(Var("1"),Var("2")) ), Var("3"));;
 let liste_Formules = cnf_to_disjonctionListe fTest;;
 
+(* Crétion du fichier entree.dimacs *)
 let create_dimacs formula_liste out_channel = 
 	output_string out_channel ("p cnf "^(string_of_int (sizeGrid*sizeGrid))^" "^(string_of_int (length formula_liste)));
 	output_string out_channel "\n";
@@ -90,19 +92,28 @@ let create_dimacs formula_liste out_channel =
 		|[] -> ()
 		|[a] -> output_string out_channel ((string_of_var_NNF a)^"0")
 		|a::t -> (output_string out_channel ((string_of_var_NNF a)^"0\n")); print_disjonction t;
-	in print_disjonction formula_liste
+	in print_disjonction formula_liste;
+	write_solutions_to_files out_channel;
 ;;
 
-let liste_memo_clauses = ref [];;
-
-(* Affiche résultat minisat *)
+(* Affiche les résultats minisat *)
 let show_stable () = 
+	(* Ouverture et écriture du fichier *)
+	let out_channel = open_out entree_dimacs in
 	create_dimacs liste_Formules out_channel;
 	close_out out_channel;
+
+	(* Execution de minisat *)
 	Sys.command("minisat -verb=0 entree.dimacs sortie");
-	if (String.compare (input_line in_channel) "UNSAT") = 0 then print_string "Il n'y a plus de générations stables.\n"
+
+	(* Lecture du résultat *)
+	if (String.compare (input_line in_channel) "UNSAT") = 0 then 
+		begin 
+			print_string "Il n'y a plus de générations stables.\n";
+		end
 	else 
 		begin
+			(* Sauvegarde de la solution et affichage *)
 			let line = (input_line in_channel) in 
 			let splitLine = Str.split (Str.regexp " ") line in
 			liste_memo_clauses := (string_of_StringList (negative_string_liste splitLine))::!liste_memo_clauses;
@@ -111,9 +122,3 @@ let show_stable () =
 ;;
 
 show_stable ();;
-
-(* TEST
-let ftest = generationToVars 2 [A,A,A,A,A];;
-let liste = cnf_to_disjonctionListe ftest;;
-printListeFormule liste;;
-*)
